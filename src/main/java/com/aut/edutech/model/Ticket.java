@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +21,8 @@ public class Ticket {
     private String titulo;
     private String descripcionTicket;
     private String estadoTicket;
-    private String categoriaTicket;
+    @Enumerated(EnumType.STRING)
+    private CategoriaTicket categoriaTicket;
     private String asignadoA;
     private String creadoPor;
-
 }

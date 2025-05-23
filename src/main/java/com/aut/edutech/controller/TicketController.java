@@ -1,5 +1,6 @@
 package com.aut.edutech.controller;
 
+import com.aut.edutech.model.CategoriaTicket;
 import com.aut.edutech.model.Ticket;
 import com.aut.edutech.service.TicketService;
 
@@ -35,7 +36,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ticket> actualizarTicket(@PathVariable Long id, @Valid @RequestBody Ticket ticketActualizado) {
+    public ResponseEntity<Ticket> actualizarTicket(@PathVariable Long id, @RequestBody Ticket ticketActualizado) {
         Ticket actualizado = ticketService.actualizarTicket(id, ticketActualizado);
         return ResponseEntity.ok(actualizado);
     }
@@ -45,4 +46,17 @@ public class TicketController {
         ticketService.eliminarTicket(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/asignar")
+    public ResponseEntity<Ticket> asignarTicket(@PathVariable Long id, @RequestParam String usuarioId) {
+        Ticket actualizado = ticketService.asignarTicket(id, usuarioId);
+        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}/categorizar")
+        public ResponseEntity<Ticket> categorizarTicket(@PathVariable Long id, @RequestParam CategoriaTicket categoria) {
+            Ticket actualizado = ticketService.categorizarTicket(id, categoria);
+            return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    }
+
 }

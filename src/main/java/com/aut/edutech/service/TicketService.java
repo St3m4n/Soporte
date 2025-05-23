@@ -1,5 +1,6 @@
 package com.aut.edutech.service;
 
+import com.aut.edutech.model.CategoriaTicket;
 import com.aut.edutech.model.Ticket;
 import com.aut.edutech.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,25 @@ public class TicketService {
             ticket.setCategoriaTicket(ticketActualizado.getCategoriaTicket());
             ticket.setAsignadoA(ticketActualizado.getAsignadoA());
             ticket.setCreadoPor(ticketActualizado.getCreadoPor());
-            return ticketRepository.save(ticket);
-        }).orElseGet(() -> {
-            ticketActualizado.setId(id);
-            return ticketRepository.save(ticketActualizado);
-        });
+            return ticketRepository.save(ticket);}).orElseGet(() -> {
+                ticketActualizado.setId(id);
+                return ticketRepository.save(ticketActualizado);});
     }
 
     public void eliminarTicket(Long id) {
         ticketRepository.deleteById(id);
     }
+
+    public Ticket asignarTicket(Long id, String usuarioId) {
+        return ticketRepository.findById(id).map(ticket -> {
+            ticket.setAsignadoA(usuarioId);
+            return ticketRepository.save(ticket);}).orElse(null);
+    }
+
+    public Ticket categorizarTicket(Long id, CategoriaTicket categoria) {
+        return ticketRepository.findById(id).map(ticket -> {
+            ticket.setCategoriaTicket(categoria);
+            return ticketRepository.save(ticket);}).orElse(null);
+    }
+
 }
