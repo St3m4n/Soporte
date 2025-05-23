@@ -24,7 +24,7 @@ public class Ticket {
     @Column(nullable = false, length = 1000)
     private String descripcionTicket;
     @Enumerated(EnumType.STRING)
-    private String estadoTicket;
+    private EstadoTicket estadoTicket;
     @Enumerated(EnumType.STRING)
     private CategoriaTicket categoriaTicket;
     private String asignadoA;
