@@ -58,5 +58,4 @@ public class TicketController {
             Ticket actualizado = ticketService.categorizarTicket(id, categoria);
             return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
     }
-
 }
