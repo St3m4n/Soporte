@@ -138,4 +138,47 @@ public class TicketControllerTest {
                 .andExpect(jsonPath("$.categoriaTicket").value("SOFTWARE"));
     }
 
+    @Test
+    void testCrearTicketConDatosIncorrectos() throws Exception {
+        // Simula la creación de un ticket con datos incorrectos (falta algún campo)
+        mockMvc.perform(post("/api/tickets")
+                .contentType("application/json")
+                .content(
+                        "{\"titulo\":\"\",\"descripcionTicket\":\"\",\"estadoTicket\":\"\",\"categoriaTicket\":\"\",\"asignadoA\":\"\",\"creadoPor\":\"\"}"))
+                .andExpect(status().isBadRequest()); // Esperamos un 400 Bad Request
+    }
+
+    @Test
+    void testObtenerTicketPorIdNoExistente() throws Exception {
+        // Simula que no existe un ticket con ID 999
+        when(ticketService.obtenerTicketPorId(999L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/tickets/999"))
+                .andExpect(status().isNotFound()); // Esperamos un 404 Not Found
+    }
+
+    @Test
+    void testActualizarTicketNoExistente() throws Exception {
+        Ticket ticketActualizado = new Ticket();
+        ticketActualizado.setId(999L);
+        ticketActualizado.setTitulo("Ticket No Existente");
+
+        // Simula que no existe un ticket con ID 999
+        when(ticketService.actualizarTicket(eq(999L), any(Ticket.class))).thenReturn(null);
+
+        mockMvc.perform(put("/api/tickets/999")
+                .contentType("application/json")
+                .content("{\"titulo\":\"Ticket No Existente\"}"))
+                .andExpect(status().isNotFound()); // Esperamos un 404 Not Found
+    }
+
+    @Test
+    void testAsignarTicketConUsuarioNoExistente() throws Exception {
+        // Simula que no existe el ticket con ID 999
+        when(ticketService.asignarTicket(eq(999L), eq("UsuarioNoExistente"))).thenReturn(null);
+
+        mockMvc.perform(put("/api/tickets/999/asignar?usuarioId=UsuarioNoExistente"))
+                .andExpect(status().isNotFound()); // Esperamos un 404 Not Found
+    }
+
 }

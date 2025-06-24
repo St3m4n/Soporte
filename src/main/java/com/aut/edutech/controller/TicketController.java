@@ -38,7 +38,10 @@ public class TicketController {
     @PutMapping("/{id}")
     public ResponseEntity<Ticket> actualizarTicket(@PathVariable Long id, @RequestBody Ticket ticketActualizado) {
         Ticket actualizado = ticketService.actualizarTicket(id, ticketActualizado);
-        return ResponseEntity.ok(actualizado);
+        if (actualizado == null) {
+            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra el ticket
+        }
+        return ResponseEntity.ok(actualizado); // Retorna 200 OK si se actualizó el ticket
     }
 
     @PutMapping("/{id}/asignar")
@@ -48,8 +51,8 @@ public class TicketController {
     }
 
     @PutMapping("/{id}/categorizar")
-        public ResponseEntity<Ticket> categorizarTicket(@PathVariable Long id, @RequestParam CategoriaTicket categoria) {
-            Ticket actualizado = ticketService.categorizarTicket(id, categoria);
-            return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    public ResponseEntity<Ticket> categorizarTicket(@PathVariable Long id, @RequestParam CategoriaTicket categoria) {
+        Ticket actualizado = ticketService.categorizarTicket(id, categoria);
+        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
     }
 }
