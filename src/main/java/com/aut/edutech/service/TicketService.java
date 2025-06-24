@@ -40,10 +40,6 @@ public class TicketService {
                 return ticketRepository.save(ticketActualizado);});
     }
 
-    public void eliminarTicket(Long id) {
-        ticketRepository.deleteById(id);
-    }
-
     public Ticket asignarTicket(Long id, String usuarioId) {
         return ticketRepository.findById(id).map(ticket -> {
             ticket.setAsignadoA(usuarioId);

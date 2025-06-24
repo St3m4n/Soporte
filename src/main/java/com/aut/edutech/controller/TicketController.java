@@ -41,12 +41,6 @@ public class TicketController {
         return ResponseEntity.ok(actualizado);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTicket(@PathVariable Long id) {
-        ticketService.eliminarTicket(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/{id}/asignar")
     public ResponseEntity<Ticket> asignarTicket(@PathVariable Long id, @RequestParam String usuarioId) {
         Ticket actualizado = ticketService.asignarTicket(id, usuarioId);
