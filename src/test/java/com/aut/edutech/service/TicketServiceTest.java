@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -127,5 +128,35 @@ public class TicketServiceTest {
         assertThat(resultado.getCategoriaTicket()).isEqualTo(categoria);
         verify(ticketRepository, times(1)).findById(1L);
         verify(ticketRepository, times(1)).save(ticket);
+    }
+
+    @Test
+    void testActualizarTicketNoExistenteEnService() {
+        // Preparo un Ticket “de ejemplo” sin ID
+        Ticket ticketToUpdate = new Ticket();
+        ticketToUpdate.setTitulo("Título Nuevo");
+        ticketToUpdate.setDescripcionTicket("Desc nueva");
+        ticketToUpdate.setEstadoTicket(EstadoTicket.ABIERTO);
+        ticketToUpdate.setCategoriaTicket(CategoriaTicket.SOFTWARE);
+        ticketToUpdate.setAsignadoA("UsuarioX");
+        ticketToUpdate.setCreadoPor("Admin");
+
+        // Simulo que no lo encuentra en BD
+        when(ticketRepository.findById(999L)).thenReturn(Optional.empty());
+        // Al salvar, devuelvo tal cual el objeto que recibe
+        when(ticketRepository.save(any(Ticket.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Ejecuto la operación
+        Ticket resultado = ticketService.actualizarTicket(999L, ticketToUpdate);
+
+        // Compruebo que entra en el elseGet: asigna el ID y salva
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.getId()).isEqualTo(999L);
+        assertThat(resultado.getTitulo()).isEqualTo("Título Nuevo");
+
+        // Verificaciones de interacción
+        verify(ticketRepository, times(1)).findById(999L);
+        verify(ticketRepository, times(1)).save(ticketToUpdate);
     }
 }

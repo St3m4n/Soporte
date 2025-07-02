@@ -6,6 +6,7 @@ import com.aut.edutech.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +52,8 @@ public class TicketService {
             ticket.setCategoriaTicket(categoria);
             return ticketRepository.save(ticket);}).orElse(null);
     }
+
+    
+
 
 }
